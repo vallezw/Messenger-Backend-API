@@ -57,6 +57,9 @@ public class AuthenticationController {
         if (userRepository.existsById(user.getUsername())) {
            return new ResponseEntity<>("Username already in use", HttpStatus.BAD_REQUEST);
         }
+        if (userRepository.existsByEmail(user.getEmail())){
+            return new ResponseEntity<>("Email already in use", HttpStatus.BAD_REQUEST);
+        }
         userRepository.save(user);
         return new ResponseEntity<>("Added User succesfully", HttpStatus.OK);
     }

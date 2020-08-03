@@ -2,6 +2,9 @@ package me.vallezw.messengerbackend.authentication.database;
 
 import org.springframework.data.repository.CrudRepository;
 
-public interface UserRepository extends CrudRepository<User, String> {
+import java.util.Collection;
+import java.util.Optional;
 
+public interface UserRepository extends CrudRepository<User, String> {
+    public boolean existsByEmail(String email);
 }
