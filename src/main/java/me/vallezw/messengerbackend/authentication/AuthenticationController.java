@@ -36,7 +36,7 @@ public class AuthenticationController {
     @Autowired
     private JwtUtil jwtTokenUtil;
 
-    @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception{
         try {
             authenticationManager.authenticate(
@@ -46,13 +46,17 @@ public class AuthenticationController {
         catch (BadCredentialsException e){
             throw new Exception("Incorrect username or password", e);
         }
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-        final String jwt = jwtTokenUtil.generateToken(userDetails);
-
-        return ResponseEntity.ok(new AuthenticationResponse(jwt));
+        try {
+            final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+            final String jwt = jwtTokenUtil.generateToken(userDetails);
+            return ResponseEntity.ok(new AuthenticationResponse(jwt));
+        }
+        catch (NullPointerException e) {
+            throw new Exception("Incorrect username or password", e);
+        }
     }
 
-    @RequestMapping(value = "/signUp", method = RequestMethod.POST)
+    @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public ResponseEntity<?> addUser(@RequestBody User user){
         if (userRepository.existsById(user.getUsername())) {
            return new ResponseEntity<>("Username already in use", HttpStatus.BAD_REQUEST);
@@ -61,6 +65,12 @@ public class AuthenticationController {
             return new ResponseEntity<>("Email already in use", HttpStatus.BAD_REQUEST);
         }
         userRepository.save(user);
-        return new ResponseEntity<>("Added User succesfully", HttpStatus.OK);
+        try {
+            ResponseEntity<?> res = createAuthenticationToken(new AuthenticationRequest(user.getUsername(), user.getPassword()));
+            return res;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Error: " + e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
