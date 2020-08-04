@@ -17,7 +17,7 @@ public class JwtUtil {
     public String extractUsername(String token) {
         try {
             return extractClaim(token, Claims::getSubject);
-        } catch (ExpiredJwtException | SignatureException e) {
+        } catch (ExpiredJwtException | SignatureException | MalformedJwtException e) {
             return null;
         }
 
