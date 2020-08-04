@@ -1,9 +1,6 @@
 package me.vallezw.messengerbackend.authentication.util;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import org.springframework.cglib.core.internal.Function;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -20,8 +17,7 @@ public class JwtUtil {
     public String extractUsername(String token) {
         try {
             return extractClaim(token, Claims::getSubject);
-        }
-        catch (ExpiredJwtException e) {
+        } catch (ExpiredJwtException | SignatureException e) {
             return null;
         }
 
