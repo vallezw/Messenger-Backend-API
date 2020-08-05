@@ -16,6 +16,7 @@ public class HelloResource {
     public String hello(@RequestHeader (name="Authorization") String header) {
         String token = header.substring(7);
         String username = jwtUtil.extractUsername(token);
+        System.out.println("Gu");
         return "Hello " + username;
     }
 }

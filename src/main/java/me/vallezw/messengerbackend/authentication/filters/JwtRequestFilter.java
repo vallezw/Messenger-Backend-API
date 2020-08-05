@@ -31,7 +31,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         String username = null;
         String jwt = null;
-
         if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);
             try{
@@ -42,21 +41,24 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             }
         }
 
-        if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        UserDetails userDetails = null;
 
+        if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             try {
-                UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-                if (jwtUtil.validateToken(jwt, userDetails)) {
-                    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                    usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
-                    SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-                    filterChain.doFilter(httpServletRequest, httpServletResponse);
+                userDetails = this.userDetailsService.loadUserByUsername(username);
+            }
+            catch (NullPointerException e){
+                filterChain.doFilter(httpServletRequest, httpServletResponse);
+            }
+           finally {
+                if(userDetails != null) {
+                    if (jwtUtil.validateToken(jwt, userDetails)) {
+                        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                        usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
+                        SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                    }
                 }
             }
-            catch (NullPointerException e) {
-                    filterChain.doFilter(httpServletRequest, httpServletResponse);
-            }
-
         }
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }

@@ -9,24 +9,28 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 public class ChatController {
 
-    @Autowired
+    final
     ChatRepository chatRepository;
 
-    @Autowired
+    final
     JwtUtil jwtUtil;
 
+    public ChatController(ChatRepository chatRepository, JwtUtil jwtUtil) {
+        this.chatRepository = chatRepository;
+        this.jwtUtil = jwtUtil;
+    }
 
-    @RequestMapping("/getchats")
+    @RequestMapping(value = "/getchats", method = RequestMethod.GET)
     public List<Chat> getChats(@RequestHeader (name="Authorization") String header) {
         String token = header.substring(7);
         String username = jwtUtil.extractUsername(token);
-        List<Chat> chats = chatRepository.findByUser1OrUser2(username, username);
-        return chats;
+        return chatRepository.findAllByUser1OrUser2(username, username);
     }
 
     @RequestMapping(value = "/createchat", method = RequestMethod.POST)
