@@ -42,14 +42,22 @@ public class ChatController {
     @RequestMapping(value = "/createchat", method = RequestMethod.POST)
     public ResponseEntity<?> createChat(@RequestBody CreateChatRequest body, @RequestHeader (name="Authorization") String header){
         String token = header.substring(7);
-        String user1 = jwtUtil.extractUsername(token); // Creator
-        String user2 = body.getUser(); // With who the chat is
-        try { // Found user
+        String user1 = jwtUtil.extractUsername(token);
+        String user2 = body.getUser();
+
+        // Check if user exists
+        try {
             UserDetails userdetails = userDetailsService.loadUserByUsername(user2);
         }
-        catch (NullPointerException e) { // User is not found
+        catch (NullPointerException e) {
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
         }
+
+        // Check if the chat already exists
+        if(chatRepository.existsByUser1AndUser2(user1, user2) || chatRepository.existsByUser1AndUser2(user2, user1)){
+            return new ResponseEntity<>("This chat already exists", HttpStatus.BAD_REQUEST);
+        }
+
         Chat chat = new Chat(user1, user2);
         chatRepository.save(chat);
         return new ResponseEntity<>("Created Chat", HttpStatus.OK);
