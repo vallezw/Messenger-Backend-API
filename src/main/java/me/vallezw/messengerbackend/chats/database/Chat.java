@@ -1,4 +1,4 @@
-package me.vallezw.messengerbackend.database.chats;
+package me.vallezw.messengerbackend.chats.database;
 
 import com.sun.istack.NotNull;
 
