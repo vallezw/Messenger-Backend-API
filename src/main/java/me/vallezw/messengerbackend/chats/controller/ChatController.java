@@ -3,12 +3,11 @@ package me.vallezw.messengerbackend.chats.controller;
 import me.vallezw.messengerbackend.authentication.util.JwtUtil;
 import me.vallezw.messengerbackend.chats.database.Chat;
 import me.vallezw.messengerbackend.chats.database.ChatRepository;
+import me.vallezw.messengerbackend.chats.models.CreateChatRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,7 +30,11 @@ public class ChatController {
     }
 
     @RequestMapping(value = "/createchat", method = RequestMethod.POST)
-    public ResponseEntity<?> createChat(@Reque){
-
+    public ResponseEntity<?> createChat(@RequestBody CreateChatRequest body, @RequestHeader (name="Authorization") String header){
+        String token = header.substring(7);
+        String username = jwtUtil.extractUsername(token);
+        Chat chat = new Chat(username, body.getUser());
+        chatRepository.save(chat);
+        return new ResponseEntity<>("Created Chat", HttpStatus.OK);
     }
 }

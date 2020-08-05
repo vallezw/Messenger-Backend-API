@@ -25,8 +25,7 @@ public class Chat {
 
     }
 
-    public Chat(long id, String user1, String user2) {
-        this.id = id;
+    public Chat(String user1, String user2) {
         this.user1 = user1;
         this.user2 = user2;
     }
