@@ -1,1 +1,1 @@
-Messenger-Backend-API
+An API for my messenger
