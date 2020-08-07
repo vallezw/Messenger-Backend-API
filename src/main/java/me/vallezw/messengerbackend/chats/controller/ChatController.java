@@ -5,13 +5,13 @@ import me.vallezw.messengerbackend.authentication.util.JwtUtil;
 import me.vallezw.messengerbackend.chats.database.Chat;
 import me.vallezw.messengerbackend.chats.database.ChatRepository;
 import me.vallezw.messengerbackend.chats.models.CreateChatRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class ChatController {
@@ -36,6 +36,12 @@ public class ChatController {
         String token = header.substring(7);
         String username = jwtUtil.extractUsername(token);
         return chatRepository.findAllByUser1OrUser2(username, username);
+    }
+
+    @RequestMapping("/chat/{id}")
+    public Optional<Chat> getChat(@PathVariable long id){
+        return chatRepository.findById(id);
+        // TODO: Noch checken ob man in diesem chat ist
     }
 
     @RequestMapping(value = "/createchat", method = RequestMethod.POST)
