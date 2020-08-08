@@ -29,8 +29,7 @@ public class Messege {
 
     }
 
-    public Messege(long id, long chatId, String content1, String content2, String sentby) {
-        this.id = id;
+    public Messege(long chatId, String content1, String content2, String sentby) {
         this.chatId = chatId;
         this.content1 = content1;
         this.content2 = content2;
