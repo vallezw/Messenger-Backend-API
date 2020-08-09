@@ -50,7 +50,13 @@ public class MessegeController {
 
         Messege messege = new Messege(id, bodyMessege.getContent1(), bodyMessege.getContent2(), username);
         messegeRepository.save(messege);
-        
         return new ResponseEntity<>("Created Messege successfully", HttpStatus.OK);
     }
+
+    @RequestMapping("/chat/{id}/messeges")
+    public ResponseEntity<?> getAllMessegesAtChat(@Reque){
+
+    }
+
+    private checkALl()
 }
