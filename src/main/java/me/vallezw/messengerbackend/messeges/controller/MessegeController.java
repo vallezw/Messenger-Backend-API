@@ -39,6 +39,9 @@ public class MessegeController {
 
     @RequestMapping(value = "/chat/{id}", method = RequestMethod.POST) // Message senden
     public ResponseEntity<?> textChat(@PathVariable long id, @RequestHeader(name="Authorization") String header, @RequestBody MessegeRequest bodyMessege){
+        String token = header.substring(7);
+        String username = jwtUtil.extractUsername(token);
+
         if(!checkChats(id, header)){
             return new ResponseEntity<>("Chat not found", HttpStatus.NOT_FOUND);
         }
