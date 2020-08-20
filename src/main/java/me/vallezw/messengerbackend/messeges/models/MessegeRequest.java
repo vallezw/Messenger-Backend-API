@@ -2,9 +2,9 @@ package me.vallezw.messengerbackend.messeges.models;
 
 public class MessegeRequest {
 
-    private String content1;
+    private String content1; // With pub key of user1 encrpyted
 
-    private String content2;
+    private String content2; // With pub key of user2 encrpyted
 
     public MessegeRequest() {
 

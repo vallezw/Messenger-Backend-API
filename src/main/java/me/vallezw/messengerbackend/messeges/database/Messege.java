@@ -12,7 +12,7 @@ public class Messege {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private long id; // Auto generated ID for the messege
+    private long id; // Auto generated ID for the message
 
     private long chatId; // The ID of the chat which the message was sent in
 

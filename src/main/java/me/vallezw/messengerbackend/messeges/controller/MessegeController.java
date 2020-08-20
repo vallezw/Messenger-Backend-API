@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -35,28 +36,38 @@ public class MessegeController {
         this.messegeRepository = messegeRepository;
     }
 
-    @RequestMapping(value = "/chat/{id}", method = RequestMethod.POST)
+
+    @RequestMapping(value = "/chat/{id}", method = RequestMethod.POST) // Message senden
     public ResponseEntity<?> textChat(@PathVariable long id, @RequestHeader(name="Authorization") String header, @RequestBody MessegeRequest bodyMessege){
+        if(!checkChats(id, header)){
+            return new ResponseEntity<>("Chat not found", HttpStatus.NOT_FOUND);
+        }
+        Messege messege = new Messege(id, bodyMessege.getContent1(), bodyMessege.getContent2(), username);
+        messegeRepository.save(messege);
+        return new ResponseEntity<>("Created message successfully", HttpStatus.OK);
+    }
+
+    @RequestMapping("/chat/{id}/messages")
+    public ResponseEntity<?> getAllMessagesAtChat(@PathVariable long id, @RequestHeader(name="Authorization") String header){
+        if(!checkChats(id, header)){
+            return new ResponseEntity<>("Chat not found", HttpStatus.NOT_FOUND);
+        }
+
+        List<Messege> messages = messegeRepository.getAllByChatId(id);
+        return new ResponseEntity<>(messages, HttpStatus.OK);
+    }
+
+    private boolean checkChats(long id, String header){
         String token = header.substring(7);
         String username = jwtUtil.extractUsername(token);
         Optional<Chat> chat = chatRepository.findById(id);
 
         if(!authenticationUtil.checkChat(username, chat)){
-            return new ResponseEntity<>("Chat not found", HttpStatus.NOT_FOUND);
+            return false;
         }
-        if(!authenticationUtil.checkAuthentication(username, chat)){
-            return new ResponseEntity<>("Not authorized", HttpStatus.FORBIDDEN);
+        if(!authenticationUtil.checkAuthentication(username, chat)) {
+            return false;
         }
-
-        Messege messege = new Messege(id, bodyMessege.getContent1(), bodyMessege.getContent2(), username);
-        messegeRepository.save(messege);
-        return new ResponseEntity<>("Created Messege successfully", HttpStatus.OK);
+        return true;
     }
-
-    @RequestMapping("/chat/{id}/messeges")
-    public ResponseEntity<?> getAllMessegesAtChat(@Reque){
-
-    }
-
-    private checkALl()
 }
