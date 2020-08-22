@@ -18,9 +18,8 @@ public class NotificationController {
     final private JwtUtil jwtUtil;
 
 
-    public NotificationController(NotificationRepository notificationRepository, ChatRepository chatRepository, JwtUtil jwtUtil) {
+    public NotificationController(NotificationRepository notificationRepository, JwtUtil jwtUtil) {
         this.notificationRepository = notificationRepository;
-        this.chatRepository = chatRepository;
         this.jwtUtil = jwtUtil;
     }
 
