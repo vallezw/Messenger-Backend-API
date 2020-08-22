@@ -17,17 +17,13 @@ import java.util.Optional;
 @RestController
 public class ChatController {
 
-    final
-    MyUserDetailsService userDetailsService;
+    private final MyUserDetailsService userDetailsService;
 
-    final
-    ChatRepository chatRepository;
+    private final ChatRepository chatRepository;
 
-    final
-    JwtUtil jwtUtil;
+    private final JwtUtil jwtUtil;
 
-    final
-    AuthenticationUtil authenticationUtil;
+    private final AuthenticationUtil authenticationUtil;
 
     public ChatController(ChatRepository chatRepository, JwtUtil jwtUtil, MyUserDetailsService userDetailsService, AuthenticationUtil authenticationUtil) {
         this.chatRepository = chatRepository;
