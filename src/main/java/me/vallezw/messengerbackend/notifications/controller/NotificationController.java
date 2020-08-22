@@ -1,7 +1,6 @@
 package me.vallezw.messengerbackend.notifications.controller;
 
 import me.vallezw.messengerbackend.authentication.util.JwtUtil;
-import me.vallezw.messengerbackend.chats.database.ChatRepository;
 import me.vallezw.messengerbackend.notifications.database.Notification;
 import me.vallezw.messengerbackend.notifications.database.NotificationRepository;
 import org.springframework.http.HttpStatus;
@@ -13,10 +12,9 @@ import java.util.Optional;
 @RestController
 public class NotificationController {
 
-    final private NotificationRepository notificationRepository;3
+    final private NotificationRepository notificationRepository;
 
     final private JwtUtil jwtUtil;
-
 
     public NotificationController(NotificationRepository notificationRepository, JwtUtil jwtUtil) {
         this.notificationRepository = notificationRepository;
