@@ -1,1 +1,1 @@
-An API for my messenger
+An API for my messenger.
