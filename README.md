@@ -1,1 +1,1 @@
-An API for my messenger.
+A RESTful web API for my messenger.
